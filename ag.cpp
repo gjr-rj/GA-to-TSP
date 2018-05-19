@@ -1,12 +1,12 @@
 /*
 *  ag.cpp
 *
-*  M√≥dulo respons√°vel pela execu√ß√£o do algoritmo gen√©tico
-*  Autor: Geraldo Jos√© Ferreira Chagas Junior - gjr.doc@gmail.com
+*  MÛdulo respons·vel pela execuÁ„o do algoritmo genÈtico
+*  Autor: Geraldo JosÈ Ferreira Chagas Junior - gjr.doc@gmail.com
 *
 *  PPGI - NCE - UFRJ
-*  Data Cria√ß√£o: 06/05/2017
-*  Datas de Modifica√ß√µes:
+*  Data CriaÁ„o: 06/05/2017
+*  Datas de ModificaÁıes:
 *
 */
 
@@ -54,7 +54,7 @@ unsigned TAlgGenetico::getExecRec()    { return VP_Exec_Rec; }
 unsigned TAlgGenetico::getCombinaRec() { return VP_Comb_Rec; }
 
 
-//M√©todos
+//MÈtodos
 /**********/
 void TAlgGenetico::setTime (time_t sTime) {	sysTime1 = sTime; }
 void TAlgGenetico::setTimeOut (int seg)  {	VP_segTimeOut = seg; }
@@ -199,7 +199,7 @@ void TAlgGenetico::exec()
 
    time(&sysTime2);
 
-   string strFimExec = "Temmpo de execu√ß√£o;";
+   string strFimExec = "Temmpo de execuÁ„o;";
    strFimExec += to_string(difftime(sysTime2, sysTime1));
    VP_ArqSaida->addLinha(strFimExec);
    if (getPrintParcial()) cout << strFimExec << endl;
@@ -214,20 +214,21 @@ void TAlgGenetico::exec()
    VP_ArqSaida->addLinha(strFimExec);
    if (getPrintParcial()) cout << strFimExec << endl;
 
-   strFimExec = "Melhor Alcan√ßado;";
+   strFimExec = "Melhor AlcanÁado;";
    strFimExec += to_string(get_melhor_dst());
-   strFimExec += "; Gera√ß√£o;";
+   strFimExec += "; GeraÁ„o;";
    strFimExec += to_string(get_melhor_gera());
    VP_ArqSaida->addLinha(strFimExec);
    if (getPrintParcial()) cout << strFimExec << endl;
 
    strFimExec = "Qtde de Entradas Recursivas;";
    strFimExec += to_string(getEntradaRec());
-   strFimExec += "; Qtde Execu√ß√µes Recursivas;";
+   strFimExec += "; Qtde ExecuÁıes Recursivas;";
    strFimExec += to_string(getExecRec());
-   strFimExec += "; Qtde Execu√ß√µes das Combina√ß√µes;";
+   strFimExec += "; Qtde ExecuÁıes das CombinaÁıes;";
    strFimExec += to_string(getCombinaRec());
    VP_ArqSaida->addLinha(strFimExec);
+   if (getPrintParcial()) cout << strFimExec << endl;
 
    VP_ArqSaida->addLinha("");
 
@@ -250,13 +251,13 @@ TPopulacao *TAlgGenetico::iteracao (TPopulacao *populacao, int geracao)
 
    if (getPrintParcial() && (get_profundidade()==0))
    {
-      string lin = "Gera√ß√£o ";
+      string lin = "GeraÁ„o ";
       lin += to_string (geracao);
       lin += " / ";
       lin += to_string (getMaxGeracao());
       lin += ":";
 
-      cout << lin << "(" << get_profundidade() << ") Melhor: " << melhor->get_distancia() << " - Pior: " << pior->get_distancia() << " - M√©dia: " << novaPop->distanciaMedia() << " - Tempo: " << difftime(sysTime2, sysTime1) << endl;
+      cout << lin << "(" << get_profundidade() << ") Melhor: " << melhor->get_distancia() << " - Pior: " << pior->get_distancia() << " - MÈdia: " << novaPop->distanciaMedia() << " - Tempo: " << difftime(sysTime2, sysTime1) << endl;
       VP_ArqSaida->addTexto(lin);
    }
 
@@ -330,16 +331,16 @@ void TAlgGenetico::fazMutacao(TPopulacao *populacao)
 {
    int ini=0;
    int qtdeMutacao          = populacao->get_tamanho() * getPercentMutacao() / 100;
-	int qtdeMutacaoRecursiva = populacao->get_tamanho() * getPercentMutacaoRecursiva() / 100;
+   int qtdeMutacaoRecursiva = populacao->get_tamanho() * getPercentMutacaoRecursiva() / 100;
 
    switch (getSelIndMutacao())
    {
-      case 0:  //O melhor nunca sofre muta√ß√£o
+      case 0:  //O melhor nunca sofre mutaÁ„o
       {
          ini = 1;
          break;
       }
-      case 1:  //O melhor sempre sofre muta√ß√£o
+      case 1:  //O melhor sempre sofre mutaÁ„o
       {
          populacao->sub_dist_tot((populacao->get_individuo(0))->get_distancia());
          mutacao->processa(populacao->get_individuo(0));
@@ -348,7 +349,7 @@ void TAlgGenetico::fazMutacao(TPopulacao *populacao)
          qtdeMutacao--;
          break;
       }
-      default:  //A muta√ß√£o do melhor indiv√≠duo √© aleat√≥ria
+      default:  //A mutaÁ„o do melhor indivÌduo È aleatÛria
       {
          break;
       }
@@ -382,7 +383,7 @@ void TAlgGenetico::mutacaoAGRecursivo(TPopulacao *populacao, int indice)
 {
 	VP_Entr_Rec++;
 
-   //Tranosformar√° as sequ√™ncias, do indiv√≠duo, que coincidem com o melhor em um gene
+   //Tranosformar· as sequÍncias, do indivÌduo, que coincidem com o melhor em um gene
    TTabConversao *tabConversao;
 
    int qtdeGenes;
@@ -392,58 +393,59 @@ void TAlgGenetico::mutacaoAGRecursivo(TPopulacao *populacao, int indice)
    TIndividuo *melhor = populacao->get_melhor();
    TIndividuo *manipulado = populacao->get_individuo(indice);
 
-   //Verifico se o esfor√ßo
-   //(poula√ß√£o (cruzamento + elitismo))* N√∫mero de gera√ß√µes * (popula√ß√£o * %muta√ß√£o)
-   esforco = (populacao->get_tamanho() * getPercentMutacao()/100) * getMaxGeracao() * populacao->get_tamanho();
+   //Verifico se o esforÁo
+   //(poulaÁ„o (cruzamento + elitismo))* N˙mero de geraÁıes * (populaÁ„o * %mutaÁ„o)
+   esforco = ((populacao->get_tamanho() * getPercentMutacao()/100) + (populacao->get_tamanho() * getPercentMutacaoRecursiva()/100)) * getMaxGeracao() * populacao->get_tamanho();
 
-   //So o fatorial for <= 0 √© porque houve overflow
-   //-1, pois como √© um ciclo, √© poss√≠vel fixar o 0
+   //So o fatorial for <= 0 È porque houve overflow
+   //-1, pois como È um ciclo, È possÌvel fixar o 0
    fatorial = TUtils::fatorialStirling(manipulado->get_qtdeGenes()-1);
 
-   //√© maior do que todas as combina√ß√µes (fatorial) da quantidade de gene
-   //Se a combina√ß√£o for maior, realiza o AG com os novos genes.
-   //Obs.: o fatorial deve ser > 0, pois provavelmente ir√° estourar o long
+   //È maior do que todas as combinaÁıes (fatorial) da quantidade de gene
+   //Se a combinaÁ„o for maior, realiza o AG com os novos genes.
+   //Obs.: o fatorial deve ser > 0, pois provavelmente ir· estourar o long
    if ((fatorial>0)&&(esforco>=fatorial))
    {
    	VP_Comb_Rec++;
 
-      //Quando o esfor√ßo √© maior que as combina√ß√µes
-      //O melhor indivuo por combina√ß√£o
+      //Quando o esforÁo È maior que as combinaÁıes
+      //O melhor indivuo por combinaÁ„o
 		manipulado->melhorPossivel();
 
 		if (manipulado->get_distancia()<melhor->get_distancia())
       {
          populacao->troca(0, indice);
 
-			if(getPrintParcial()) cout << "Melhorou na combina√ß√£o" << endl;
-         VP_ArqSaida->addLinha ("Melhorou na combina√ß√£o");
+			if(getPrintParcial()) cout << "Melhorou na combinaÁ„o. Quantidade de genes: " << manipulado->get_qtdeGenes() << endl;
+			VP_ArqSaida->addTexto("Melhorou na combinaÁ„o. Quantidade de genes: ");
+         VP_ArqSaida->addLinha (to_string (manipulado->get_qtdeGenes()));
 		}
       return;
    }
 
    do
    {
-      // tentar√° reduzir a quantidade de gene.
+      // tentar· reduzir a quantidade de gene.
       tabConversao = new TTabConversao(melhor, manipulado);
       qtdeGenes = tabConversao->get_quantidade();
 
-		//Obs.: qtdeGenes<=2, pois se for 1, indiv√≠duo √© igual ao melhor
-      //      se for 2, n√£o posso trocar as posi√ß√µes, j√° que sempre inicia
+		//Obs.: qtdeGenes<=2, pois se for 1, indivÌduo È igual ao melhor
+      //      se for 2, n„o posso trocar as posiÁıes, j· que sempre inicia
       //      pelo gene 0. Logo, posso sair sem fazer nada
       if (qtdeGenes<=2)
       {
-         //Libera mem√≥ria
+         //Libera memÛria
          delete tabConversao;
          manipulado->inverte_sub_indice(TUtils::rnd(1, manipulado->get_qtdeGenes()-1), TUtils::rnd(1, manipulado->get_qtdeGenes()-1));
       }
 
    }while (qtdeGenes<=2);
 
-   // Se n√£o reduzir, n√£o faz nada
+   // Se n„o reduzir, n„o faz nada
 	int reudcaoMinima = getPercentReducao()*0.01*manipulado->get_qtdeGenes();
    if (qtdeGenes >= reudcaoMinima)
    {
-      //Libera mem√≥ria
+      //Libera memÛria
       delete tabConversao;
       return;
    }
@@ -481,17 +483,22 @@ void TAlgGenetico::mutacaoAGRecursivo(TPopulacao *populacao, int indice)
    }
    else if (manipulado->get_distancia()==melhor->get_distancia())
    {
-		//Realiza a troca de forma que mantenha uma redu√ß√£o
-		int ind1 = TUtils::rnd(1, manipulado->get_qtdeGenes()-reudcaoMinima-1);
-		int ind2 = ind1 + reudcaoMinima;
 
-		//Garantindo que ind2 n√£o ser√° maior que a quantidade de genes
-		if (ind2>=manipulado->get_qtdeGenes()) ind2 = manipulado->get_qtdeGenes()-1;
+		//Realiza a troca de forma que mantenha uma reduÁ„o
+      //Se a troca for possÌvel, ou seja
+      if (manipulado->get_qtdeGenes()-reudcaoMinima-1 > 0)
+      {
+		   int ind1 = TUtils::rnd(1, manipulado->get_qtdeGenes()-reudcaoMinima-1);
+		   int ind2 = ind1 + reudcaoMinima;
 
-		if (ind2>ind1)
-		   manipulado->inverte_sub_indice(TUtils::rnd(1, manipulado->get_qtdeGenes()-1), TUtils::rnd(1, manipulado->get_qtdeGenes()-1));
+		   //Garantindo que ind2 n„o ser· maior que a quantidade de genes
+		   if (ind2>=manipulado->get_qtdeGenes()) ind2 = manipulado->get_qtdeGenes()-1;
+
+		   if (ind2>ind1)
+		      manipulado->inverte_sub_indice(TUtils::rnd(1, manipulado->get_qtdeGenes()-1), TUtils::rnd(1, manipulado->get_qtdeGenes()-1));
+      }
    }
 
-   //Libera mem√≥ria
+   //Libera memÛria
    delete tabConversao;
 }

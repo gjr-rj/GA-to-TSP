@@ -38,7 +38,7 @@ double TUtils::rndd(double low, double high, unsigned calibracao)
 {
 	//Gerando um número randomico entre 0 e VP_MaxrndD
    unsigned r = rand() % calibracao;
-	
+
 	//Após achar um randomico entre 0 e VP_MaxrndD
 	//vou converter para a escala entre low e high
 	return ((((double)r)/calibracao)*(high-low))+low;
@@ -53,9 +53,9 @@ double TUtils::rndd(double low, double high, unsigned calibracao)
 bool TUtils::flip(float prob)
 {
    if (prob==0) return 0;
-	
+
 	double d = rnd(1, 10000);
 	double p = prob * 10000;
-  
+
   return (d <= p)?1:0;
 }
