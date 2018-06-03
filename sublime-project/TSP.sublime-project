@@ -1,0 +1,24 @@
+{
+    "folders":
+    [
+        {
+            "path": "../"
+        }
+    ],
+
+    "build_systems" : [
+        {
+            "name": "TSP",            
+            "working_dir": "${project_path:${folder}}/../",
+            "path": "c:\\cygwin64\\bin\\",
+            "shell_cmd": "make.exe",
+            "variants" : [
+                {   "name" : "clean",
+                    "shell_cmd": "make.exe clean",
+                },
+            ]
+        },
+    ]
+}
+
+
