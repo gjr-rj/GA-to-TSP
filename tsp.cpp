@@ -12,6 +12,44 @@
 
 #include "tsp.hpp"
 
+using namespace std;
+
+void TMapaGenes::linhaArqParaTPoint (TPoint *p, char *l)
+{
+   char *ini;
+   char *fim;
+   char temp[25];
+   int i;
+   long x;
+   long y;
+
+   ini = l;
+
+   //Indice
+   for (fim = ini; fim[0] != ' '; fim++);
+   fim[0] = '\0';
+   i = atoi (ini);
+   fim++;
+   ini = fim;
+
+   //posição x
+   for (fim = ini; fim[0] != ' '; fim++);
+   fim[0] = '\0';
+   sprintf(temp, "0%s", ini);
+   x = atof (temp);
+   fim++;
+   ini = fim;
+
+   //Posição y
+   for (fim = ini; fim[0] != '\n'; fim++);
+   fim[0] = '\0';
+   sprintf(temp, "0%s", ini);
+   y = atof (temp);
+
+   p[i].x = x;
+   p[i].y = y;
+}
+
 //Metodos Privados
 int TMapaGenes::getNumGeneDoArquivo(xmlDocPtr doc, xmlNode * a_node)
 {
@@ -175,4 +213,60 @@ double TMapaGenes::get_distancia(int geneOri, int geneDest)
           return VP_mapaDist[geneOri][geneDest];
        else
           return 0.0;
+}
+
+int TMapaGenes::carregaDoArquivoTSP(char *nomeArquivo)
+{
+   float df;
+   int carregando = 0;
+   FILE *arq;
+   char linha[100];
+   TPoint p [100000];
+   char *result;
+   int numCid = 0;
+   long dx;
+   long dy;
+
+   // Abre um arquivo TEXTO para LEITURA
+   arq = fopen(nomeArquivo, "rt");
+   if (arq == NULL)  // Se houve erro na abertura
+   {
+      cout << "Problemas na abertura do arquivo" << endl;
+      return 0;
+   }
+
+   while (!feof(arq))
+   {
+      // Lê uma linha (inclusive com o '\n')
+      result = fgets(linha, 100, arq);  // o 'fgets' lê até 99 caracteres ou até o '\n'
+      if (result)  // Se foi possível ler
+      {
+         if ('1' == linha[0]) carregando = 1;
+         if (('E' == linha[0]) && ('O' == linha[1]) && ('F' == linha[2])) carregando = 0;
+
+         if (carregando)
+         {
+            linhaArqParaTPoint (p, linha);
+            numCid++;
+         }
+      }
+   }
+   fclose(arq);
+
+   VP_qtdeGenes = numCid;
+
+   //Alocando a tabela
+   inicializa (VP_qtdeGenes);
+
+   for (int i = 1; i < numCid; i++)
+      for (int j = i+1; j<= numCid; j++)
+      {
+         dx = p[i].x - p[j].x;
+         dy = p[i].y - p[j].y;
+         df = sqrt((dx*dx)+(dy*dy));
+         set_distancia(i-1, j-1, df);
+         set_distancia(j-1, i-1, df);
+      }
+
+   return 1;
 }
