@@ -36,6 +36,9 @@
 #include "ag.hpp"
 #include "tsp.hpp"
 
+#define strXML "-XML"
+#define strTSP "-TSP"
+
 using namespace std;
 
 #ifdef LIBXML_TREE_ENABLED
@@ -45,33 +48,55 @@ int main(int argc, char *argv[])
    string nomeArqSaida;
    string cabecalho;
    TAlgGenetico *ag;
+   string typeArq;
+   locale loc;
+   TArqLog *arqSaida;
+
    TMapaGenes *mapa = new TMapaGenes();
    TConfig *config  = new TConfig();
-   TArqLog *arqSaida;
+   
 
    time_t tempo;
    struct tm *tlocal;
    char data[128];
 
    //parâmetros obrigatóros como entrada
-   if (argc < 4)
+   if (argc < 5)
    {
       cout << "Parâmetros obrigatóros:" << endl;
-      cout << "\t 1 - Arquivo de instância TSP, no formato XML" << endl;
-      cout << "\t 2 - Arquivo de configuração, no formato XML" << endl;
-      cout << "\t 3 - Nome do arquivo de saída, resultados" << endl;
+      cout << "\t 1 - -XML ou -TSP. (formato XML ou TSP do arquivo de instância)" << endl;
+      cout << "\t 2 - Arquivo de instância TSP, no formato XML ou TSP" << endl;
+      cout << "\t 3 - Arquivo de configuração, no formato XML" << endl;
+      cout << "\t 4 - Nome do arquivo de saída, resultados" << endl;
       return 1;
    }
 
    LIBXML_TEST_VERSION
 
-   cout << "Caregando arquivo de configuração: " << argv[2] << endl;
-   config->carregaDoArquivo(argv[2]);
-   cout << "Arquivo " << argv[2] << " carregado." << endl;
+   typeArq = argv[1];
 
-   cout << "Caregando instância " << argv[1] << endl;
-   mapa->carregaDoArquivo (argv[1]);
-   cout << "Instância " << argv[1] << " carregada." << endl;
+   cout << "Caregando arquivo de configuração: " << argv[3] << endl;
+   config->carregaDoArquivo(argv[3]);
+   cout << "Arquivo " << argv[3] << " carregado." << endl;
+
+   cout << "Caregando instância " << argv[2] << endl;
+
+   if (0 == typeArq.compare(strXML))
+   {
+      mapa->carregaDoArquivo (argv[2]);
+   }
+   else if ((0 == typeArq.compare(strTSP)))
+   {
+       if (!mapa->carregaDoArquivoTSP (argv[2]))
+          return 1;
+   }
+   else
+   {
+      cout << "Formato de arquivo desconhecido " << typeArq << endl;
+      return 1;
+   }
+
+   cout << "Instância " << argv[2] << " carregada." << endl;
 
    TUtils::initRnd ();
 
@@ -81,7 +106,7 @@ int main(int argc, char *argv[])
       tempo = time(0);
       tlocal = localtime(&tempo);
       strftime(data, 128, "%d_%m_%y_%H_%M_%S", tlocal);
-      nomeArqSaida = argv[3];
+      nomeArqSaida = argv[4];
       nomeArqSaida += "_";
       nomeArqSaida += to_string(countExec);
       nomeArqSaida += "_";
@@ -95,7 +120,7 @@ int main(int argc, char *argv[])
       }
 
       cabecalho   = "Instância;";
-      cabecalho  +=  argv[1];
+      cabecalho  +=  argv[2];
       cabecalho  +=  "\n";
 
       cabecalho  += "Execução;";

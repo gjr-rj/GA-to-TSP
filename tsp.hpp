@@ -18,6 +18,9 @@
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 
+#include <iostream>
+#include <cmath>
+
 /*******************************************************
 classe de TMapaGenes. Todas as distâncias entre os genes
 ********************************************************/
@@ -28,6 +31,7 @@ class TMapaGenes
       int VP_qtdeGenes;
 
    //Metodos Privados
+   void linhaArqParaTPoint (TPoint *p, char *l);
    int getNumGeneDoArquivo(xmlDocPtr doc, xmlNode * a_node);
    void preencheMapaDist (int geneOri, xmlDocPtr doc, xmlNode * a_node);
 
@@ -49,6 +53,8 @@ class TMapaGenes
       void set_distancia(int geneOri, int geneDest, double distancia);
 
       double get_distancia(int geneOri, int geneDest);
+
+      int carregaDoArquivoTSP(char *nomeArquivo);
 
 };
 

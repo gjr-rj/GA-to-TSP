@@ -44,4 +44,10 @@ struct TTipoConversao
    int ulDest;
 };
 
+struct TPoint
+{
+   long x;
+   long y;
+};
+
 #endif
