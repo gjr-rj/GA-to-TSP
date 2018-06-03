@@ -233,6 +233,7 @@ void TAlgGenetico::exec()
    strFimExec += "; Qtde Execuções das Combinações;";
    strFimExec += to_string(getCombinaRec());
    VP_ArqSaida->addLinha(strFimExec);
+   if (getPrintParcial()) cout << strFimExec << endl;
 
    VP_ArqSaida->addLinha("");
 
@@ -399,7 +400,12 @@ void TAlgGenetico::mutacaoAGRecursivo(TPopulacao *populacao, int indice)
 
    //Verifico se o esforço
    //(poulação (cruzamento + elitismo))* Número de gerações * (população * %mutação)
-   esforco = (populacao->get_tamanho() * getPercentMutacao()/100) * getMaxGeracao() * populacao->get_tamanho();
+   esforco = ( 
+              (populacao->get_tamanho() * getPercentMutacao()/100) + 
+              (populacao->get_tamanho() * getPercentMutacaoRecursiva()/100)
+            )
+            * getMaxGeracao() 
+            * populacao->get_tamanho();
 
    //So o fatorial for <= 0 é porque houve overflow
    //-1, pois como é um ciclo, é possível fixar o 0
@@ -420,8 +426,9 @@ void TAlgGenetico::mutacaoAGRecursivo(TPopulacao *populacao, int indice)
       {
          populacao->troca(0, indice);
 
-			if(getPrintParcial()) cout << "Melhorou na combinação" << endl;
-         VP_ArqSaida->addLinha ("Melhorou na combinação");
+			if(getPrintParcial()) cout << "Melhorou na combinação. Quantidade de genes: " << manipulado->get_qtdeGenes() << endl;
+         VP_ArqSaida->addTexto ("Melhorou na combinação. Quantidade de genes: ");
+         VP_ArqSaida->addLinha (to_string (manipulado->get_qtdeGenes()));
 		}
       return;
    }
@@ -487,14 +494,18 @@ void TAlgGenetico::mutacaoAGRecursivo(TPopulacao *populacao, int indice)
    else if (manipulado->get_distancia()==melhor->get_distancia())
    {
 		//Realiza a troca de forma que mantenha uma redução
-		int ind1 = TUtils::rnd(1, manipulado->get_qtdeGenes()-reudcaoMinima-1);
-		int ind2 = ind1 + reudcaoMinima;
+      //Se a troca for possível, ou seja
+      if (manipulado->get_qtdeGenes()-reudcaoMinima-1 > 0)
+      {
+		   int ind1 = TUtils::rnd(1, manipulado->get_qtdeGenes()-reudcaoMinima-1);
+		   int ind2 = ind1 + reudcaoMinima;
 
-		//Garantindo que ind2 não será maior que a quantidade de genes
-		if (ind2>=manipulado->get_qtdeGenes()) ind2 = manipulado->get_qtdeGenes()-1;
+		   //Garantindo que ind2 não será maior que a quantidade de genes
+	 	   if (ind2>=manipulado->get_qtdeGenes()) ind2 = manipulado->get_qtdeGenes()-1;
 
-		if (ind2>ind1)
-		   manipulado->inverte_sub_indice(TUtils::rnd(1, manipulado->get_qtdeGenes()-1), TUtils::rnd(1, manipulado->get_qtdeGenes()-1));
+		   if (ind2>ind1)
+		      manipulado->inverte_sub_indice(TUtils::rnd(1, manipulado->get_qtdeGenes()-1), TUtils::rnd(1, manipulado->get_qtdeGenes()-1));
+      }
    }
 
    //Libera memória
