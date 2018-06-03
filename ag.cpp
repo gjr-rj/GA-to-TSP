@@ -151,20 +151,25 @@ void TAlgGenetico::exec()
    TPopulacao *populacao = new TPopulacao (getTamPopulacao(), getMapa(), getArqLog());
    populacao->povoa();
 
-//Descomente para teste de cruzamento
-//TIndividuo *i1 = populacao->get_individuo(0);
-//TIndividuo *i2 = populacao->get_individuo(1);
-//cout << i1->toString()<< " : " << i1->get_distancia() << endl;
-//if(getMutacao()!=15) mutacao->processa(i1);
-//else mutacao->processa(i1, populacao);
-//cout << i1->toString()<< " : " << i1->get_distancia() << endl;
-//cout << i2->toString()<< " : " << i2->get_distancia() << endl;
-//vector <TIndividuo *> v = cruzamento->processa(i1, i2, populacao, getMaxGeracao(), 1);
-//cout << v[0]->toString()<< " : " << v[0]->get_distancia() << endl;
-//cout << v[1]->toString()<<endl;
 
-//return;
+#ifdef TESTA_CRUZAMENTO //macro definida no makefile
+   
+   TIndividuo *i1 = populacao->get_individuo(0);
+   TIndividuo *i2 = populacao->get_individuo(1);
+   cout << i1->toString()<< " : " << i1->get_distancia() << endl;
+   
+   if(getMutacao()!=15) mutacao->processa(i1);
+   else mutacao->processa(i1, populacao);
 
+   cout << i1->toString()<< " : " << i1->get_distancia() << endl;
+   cout << i2->toString()<< " : " << i2->get_distancia() << endl;
+   vector <TIndividuo *> v = cruzamento->processa(i1, i2, populacao, getMaxGeracao(), 1);
+   cout << v[0]->toString()<< " : " << v[0]->get_distancia() << endl;
+   cout << v[1]->toString()<<endl;
+
+   return;
+
+#endif // #ifdef TESTA_CRUZAMENTO
 
    populacao->ordena();
    time(&sysTime1);
