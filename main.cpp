@@ -1,29 +1,29 @@
 /*
 *  main.cpp
 *
-*  M√≥dulo pricipal do estudo TSP
-*  Autor: Geraldo Jos√© Ferreira Chagas Junior - gjr.doc@gmail.com
+*  MÛdulo pricipal do estudo TSP
+*  Autor: Geraldo JosÈ Ferreira Chagas Junior - gjr.doc@gmail.com
 *
 *  PPGI - NCE - UFRJ
-*  Data Cria√ß√£o: 05/05/2017
-*  Datas de Modifica√ß√µes:
+*  Data CriaÁ„o: 05/05/2017
+*  Datas de ModificaÁıes:
 *
-* Programa de Algor√≠tmo Genetico para resolver tsp de forma recursiva
-* Necess√°rio instala√ß√£o da biblioteca libxml
-* Instala√ß√£o da biblioteca no debian
+* Programa de AlgorÌtmo Genetico para resolver tsp de forma recursiva
+* Necess·rio instalaÁ„o da biblioteca libxml
+* InstalaÁ„o da biblioteca no debian
 *           $> sudo apt-get install libxml
 *
-*  Os parametros de entrada est√£o explicados no arquivo tsphelp.txt
-*  A compila√ß√£o pode ser realizada pelo comando make
+*  Os parametros de entrada est„o explicados no arquivo tsphelp.txt
+*  A compilaÁ„o pode ser realizada pelo comando make
 *
-*  Se n√£o for definido parametros de entrada, ser√£o utilizados os
-*  parametros padr√µes, conforme abaixo.
+*  Se n„o for definido parametros de entrada, ser„o utilizados os
+*  parametros padrıes, conforme abaixo.
 *
-*  n√∫mero de execu√ß√µes:
-*  muta√ß√£o:
+*  n˙mero de execuÁıes:
+*  mutaÁ„o:
 *  cruzamento:
-*  popula√ß√£o:
-*  % de muta√ß√£o:
+*  populaÁ„o:
+*  % de mutaÁ„o:
 *  % de cruzamento:
 *  recursividade:
 *  % de melhora recursiva:
@@ -36,6 +36,9 @@
 #include "ag.hpp"
 #include "tsp.hpp"
 
+#define strXML "-XML"
+#define strTSP "-TSP"
+
 using namespace std;
 
 #ifdef LIBXML_TREE_ENABLED
@@ -44,6 +47,10 @@ int main(int argc, char *argv[])
 {
    string nomeArqSaida;
    string cabecalho;
+   string typeArq;
+
+   locale loc;
+
    TAlgGenetico *ag;
    TMapaGenes *mapa = new TMapaGenes();
    TConfig *config  = new TConfig();
@@ -53,25 +60,43 @@ int main(int argc, char *argv[])
    struct tm *tlocal;
    char data[128];
 
-   //par√¢metros obrigat√≥ros como entrada
-   if (argc < 4)
+   //par‚metros obrigatÛros como entrada
+   if (argc < 5)
    {
-      cout << "Par√¢metros obrigat√≥ros:" << endl;
-      cout << "\t 1 - Arquivo de inst√¢ncia TSP, no formato XML" << endl;
-      cout << "\t 2 - Arquivo de configura√ß√£o, no formato XML" << endl;
-      cout << "\t 3 - Nome do arquivo de sa√≠da, resultados" << endl;
+      cout << "Par‚metros obrigatÛros:" << endl;
+      cout << "\t 1 - -XML ou -TSP. (arquivo de inst‚ncia XML ou TSP)" << endl;
+      cout << "\t 2 - Arquivo de inst‚ncia TSP, no formato XML OU TSP" << endl;
+      cout << "\t 3 - Arquivo de configuraÁ„o, no formato XML" << endl;
+      cout << "\t 4 - Nome do arquivo de saÌda, resultados" << endl;
       return 1;
    }
 
    LIBXML_TEST_VERSION
 
-   cout << "Caregando arquivo de configura√ß√£o: " << argv[2] << endl;
-   config->carregaDoArquivo(argv[2]);
-   cout << "Arquivo " << argv[2] << " carregado." << endl;
+   typeArq = argv[1];
 
-   cout << "Caregando inst√¢ncia " << argv[1] << endl;
-   mapa->carregaDoArquivo (argv[1]);
-   cout << "Inst√¢ncia " << argv[1] << " carregada." << endl;
+   cout << "Caregando arquivo de configuraÁ„o: " << argv[3] << endl;
+   config->carregaDoArquivo(argv[3]);
+   cout << "Arquivo " << argv[3] << " carregado." << endl;
+
+   cout << "Caregando inst‚ncia " << argv[2] << endl;
+
+   if (0 == typeArq.compare(strXML))
+   {
+      mapa->carregaDoArquivo (argv[2]);
+   }
+   else if ((0 == typeArq.compare(strTSP)))
+   {
+       if (!mapa->carregaDoArquivoTSP (argv[2]))
+          return 1;
+   }
+   else
+   {
+      cout << "Formato de arquivo desconhecido " << typeArq << endl;
+      return 1;
+   }
+
+   cout << "Inst‚ncia " << argv[2] << " carregada." << endl;
 
    TUtils::initRnd ();
 
@@ -81,7 +106,7 @@ int main(int argc, char *argv[])
       tempo = time(0);
       tlocal = localtime(&tempo);
       strftime(data, 128, "%d_%m_%y_%H_%M_%S", tlocal);
-      nomeArqSaida = argv[3];
+      nomeArqSaida = argv[4];
       nomeArqSaida += "_";
       nomeArqSaida += to_string(countExec);
       nomeArqSaida += "_";
@@ -90,29 +115,29 @@ int main(int argc, char *argv[])
 
       if (config->printParcial)
       {
-         cout << "Execu√ß√£o " << countExec+1 << " / " << config->numExec << " iniciada. "<< endl;
+         cout << "ExecuÁ„o " << countExec+1 << " / " << config->numExec << " iniciada. "<< endl;
          cout << "Arquivo de saida de resultados: " << nomeArqSaida << endl;
       }
 
-      cabecalho   = "Inst√¢ncia;";
-      cabecalho  +=  argv[1];
+      cabecalho   = "Inst‚ncia;";
+      cabecalho  +=  argv[2];
       cabecalho  +=  "\n";
 
-      cabecalho  += "Execu√ß√£o;";
+      cabecalho  += "ExecuÁ„o;";
       cabecalho  += to_string(countExec+1);
       cabecalho  += " / ";
       cabecalho  += to_string(config->numExec);
       cabecalho  += "\n";
 
-      cabecalho  += "Tamanho da Popula√ßap;";
+      cabecalho  += "Tamanho da PopulaÁap;";
       cabecalho  += to_string(config->tamPopulacao);
       cabecalho  += "\n";
 
-      cabecalho  += "M√°ximo de gera√ß√µes;";
+      cabecalho  += "M·ximo de geraÁıes;";
       cabecalho  += to_string(config->maxGeracao);
       cabecalho  += "\n";
 
-      cabecalho  += "Muta√ß√£o;";
+      cabecalho  += "MutaÁ„o;";
       cabecalho  += to_string(config->mutacao);
       cabecalho  += "\n";
 
@@ -120,11 +145,11 @@ int main(int argc, char *argv[])
       cabecalho  += to_string(config->cruzamento);
       cabecalho  += "\n";
 
-      cabecalho  += "% Manpula√ß√£o;";
+      cabecalho  += "% ManpulaÁ„o;";
       cabecalho  += to_string(config->percentManipulacao);
       cabecalho  += "\n";
 
-      cabecalho  += "% Muta√ß√£o;";
+      cabecalho  += "% MutaÁ„o;";
       cabecalho  += to_string(config->percentMutacao);
       cabecalho  += "\n";
 
@@ -136,11 +161,11 @@ int main(int argc, char *argv[])
       cabecalho  += to_string(config->percentMutacaoRecursiva);
       cabecalho  += "\n";
 
-      cabecalho  += "Percentual de Redu√ß√£o;";
+      cabecalho  += "Percentual de ReduÁ„o;";
       cabecalho  += to_string(config->percentReducao);
       cabecalho  += "\n";
 
-      cabecalho  += "Profundidade M√°xima;";
+      cabecalho  += "Profundidade M·xima;";
       cabecalho  += to_string(config->profundidadeMaxima);
       cabecalho  += "\n";
 
@@ -148,11 +173,11 @@ int main(int argc, char *argv[])
       cabecalho  += to_string(config->percentElitismo);
       cabecalho  += "\n";
 
-      cabecalho  += "Sele√ß√£o para Cruzamento;";
+      cabecalho  += "SeleÁ„o para Cruzamento;";
       cabecalho  += to_string(config->selecao);
       cabecalho  += "\n";
 
-      cabecalho  += "Forma de Sele√ß√£o par Muta√ß√£o;";
+      cabecalho  += "Forma de SeleÁ„o par MutaÁ„o;";
       cabecalho  += to_string(config->selIndMutacao);
       cabecalho  += "\n";
 
@@ -187,7 +212,7 @@ int main(int argc, char *argv[])
 #else
 int main(void)
 {
-    cout << "Suporte a √°rvore xml n√£o compilado" << endl;
+    cout << "Suporte a ·rvore xml n„o compilado" << endl;
     exit(1);
 }
 #endif
