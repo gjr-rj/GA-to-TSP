@@ -1,9 +1,12 @@
 LIB = lib/
 EXE = tsp
 CPP = g++
+
+#EXTRAFLAG = -DTESTA_CRUZAMENTO
 #CPPFLAGS =  -g -ggdb -Wall -Wextra -Wno-sign-compare -fopenmp -lm -std=c++11
 #CPPFLAGS =  -Wall -Wextra -Wno-sign-compare -O2 -pipe -march=native -fopenmp -lm -std=c++11
-CPPFLAGS =  -Wall `xml2-config --cflags --libs` -std=c++11
+CPPFLAGS =  -Wall `xml2-config --cflags --libs` -std=c++11 $(EXTRAFLAG)
+
 OBJ = main.o utils.o tipos.o tsp.o config.o ag.o arqlog.o populacao.o individuo.o mutacao.o cruzamento.o tabconversao.o selecao.o
 all: 	$(OBJ)
 	$(CPP) $(OBJ) -o  $(EXE) $(CPPFLAGS)
